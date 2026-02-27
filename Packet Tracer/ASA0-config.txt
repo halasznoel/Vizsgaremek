@@ -1,0 +1,18 @@
+enable
+configure terminal
+
+ASA(config)# interface GigabitEthernet1/1
+ASA(config-if)# nameif outside
+ASA(config-if)# security-level 0
+ASA(config-if)# ip address 192.168.30.18 255.255.255.252
+ASA(config-if)# no shutdown
+ASA(config-if)# exit
+
+ASA(config)# interface GigabitEthernet1/2
+ASA(config-if)# nameif inside
+ASA(config-if)# security-level 100
+ASA(config-if)# ip address 192.168.30.1 255.255.255.240
+ASA(config-if)# no shutdown
+ASA(config-if)# exit
+
+ASA(config)# route outside 0.0.0.0 0.0.0.0 192.168.30.17

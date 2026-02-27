@@ -1,0 +1,63 @@
+enable
+configure terminal
+
+ASA(config)# interface GigabitEthernet1/3
+ASA(config-if)# nameif Work
+ASA(config-if)# security-level 100
+ASA(config-if)# ip address 192.168.2.254 255.255.255.0
+ASA(config-if)# no shutdown
+
+ASA(config)# interface GigabitEthernet1/1
+ASA(config-if)# nameif Home
+ASA(config-if)# security-level 75
+ASA(config-if)# ip address 192.168.1.6 255.255.255.248
+ASA(config-if)# no shutdown
+
+ASA(config)# interface GigabitEthernet1/2
+ASA(config-if)# nameif Printer
+ASA(config-if)# security-level 50
+ASA(config-if)# ip address 192.168.1.14 255.255.255.248
+ASA(config-if)# no shutdown
+
+ASA(config)# interface GigabitEthernet1/8
+ASA(config-if)# nameif WAN
+ASA(config-if)# security-level 0
+ASA(config-if)# ip address dhcp setroute
+ASA(config-if)# no shutdown
+ASA(config-if)# exit
+
+ASA(config)# dhcpd address 192.168.2.10-192.168.2.100 Work
+ASA(config)# dhcpd dns 200.100.0.1 interface Work
+ASA(config)# dhcpd enable Work
+
+ASA(config)# object network obj_Work
+ASA(config-network-object)# subnet 192.168.2.0 255.255.255.0
+ASA(config-network-object)# nat (Work,WAN) dynamic interface
+ASA(config-network-object)# exit
+
+ASA(config)# object network obj_Home
+ASA(config-network-object)# subnet 192.168.1.0 255.255.255.248
+ASA(config-network-object)# nat (Home,WAN) dynamic interface
+ASA(config-network-object)# exit
+
+! -- Kimenő forgalom szűrése --
+ASA(config)# access-list INTERNET_TRAFFIC extended permit icmp any any
+ASA(config)# access-list INTERNET_TRAFFIC extended permit udp any any eq domain
+ASA(config)# access-list INTERNET_TRAFFIC extended permit tcp any any eq www
+ASA(config)# access-list INTERNET_TRAFFIC extended permit tcp any any eq 443
+ASA(config)# access-group INTERNET_TRAFFIC out interface WAN
+
+! -- Állapotvizsgálat (Stateful Inspection) bekapcsolása --
+ASA(config)# policy-map global_policy
+ASA(config-pmap)# class inspection_default
+ASA(config-pmap-c)# inspect icmp
+ASA(config-pmap-c)# exit
+ASA(config-pmap)# exit
+ASA(config)# service-policy global_policy global
+
+! -- Bejövő válaszok engedélyezése a WAN-ról --
+ASA(config)# access-list WAN_IN extended permit icmp any any
+ASA(config)# access-list WAN_IN extended permit tcp any eq www any
+ASA(config)# access-list WAN_IN extended permit tcp any eq 443 any
+ASA(config)# access-list WAN_IN extended permit udp any eq domain any
+ASA(config)# access-group WAN_IN in interface WAN
