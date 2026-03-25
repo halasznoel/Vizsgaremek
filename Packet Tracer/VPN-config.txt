@@ -1,0 +1,16 @@
+Server-Router> enable
+Server-Router# configure terminal
+Server-Router(config)# interface Tunnel0
+Server-Router(config-if)# ip address 10.0.0.1 255.255.255.252
+Server-Router(config-if)# tunnel source GigabitEthernet0/1
+Server-Router(config-if)# tunnel destination 192.168.30.66
+Server-Router(config-if)# end
+
+
+HQ-Router> enable
+HQ-Router# configure terminal
+HQ-Router(config)# interface Tunnel0
+HQ-Router(config-if)# ip address 10.0.0.2 255.255.255.252
+HQ-Router(config-if)# tunnel source GigabitEthernet0/1
+HQ-Router(config-if)# tunnel destination 192.168.30.65
+HQ-Router(config-if)# end

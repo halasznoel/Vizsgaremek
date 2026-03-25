@@ -1,0 +1,6 @@
+HQ-Router> enable
+HQ-Router# configure terminal
+
+! -- Statikus NAT szabály létrehozása --
+HQ-Router(config)# ip nat inside source static 192.168.30.82 192.168.30.67
+HQ-Router(config)# end
