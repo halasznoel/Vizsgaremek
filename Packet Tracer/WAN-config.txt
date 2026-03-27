@@ -1,0 +1,143 @@
+S1:
+hostname S1
+ 
+ptp clock transparent domain 0 profile default
+ 
+spanning-tree mode pvst
+spanning-tree extend system-id
+
+
+interface Port-channel1
+switchport mode trunk
+
+
+interface Port-channel2
+switchport mode trunk
+  
+interface GigabitEthernet5/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 1 mode active
+ 
+interface GigabitEthernet6/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 2 mode active
+ 
+interface GigabitEthernet7/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 2 mode active
+ 
+interface GigabitEthernet8/1
+ 
+interface GigabitEthernet9/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 1 mode active
+ 
+interface Vlan1
+ip address 192.168.30.69 255.255.255.240
+ip default-gateway 192.168.30.65
+line con 0
+ 
+line vty 0 4
+login
+line vty 5 15
+login
+
+
+--------------------------------------------
+
+S2:
+hostname S2
+ 
+ptp clock transparent domain 0 profile default
+ 
+spanning-tree mode pvst
+spanning-tree extend system-id
+ 
+interface Port-channel1
+switchport mode trunk
+ 
+interface Port-channel3
+switchport mode trunk
+ 
+interface GigabitEthernet6/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 1 mode active
+ 
+interface GigabitEthernet7/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 3 mode active
+ 
+interface GigabitEthernet8/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 1 mode active
+ 
+interface GigabitEthernet9/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 3 mode active
+ 
+interface Vlan1
+ip address 192.168.30.70 255.255.255.240
+ 
+ip default-gateway 192.168.30.65
+ 
+line con 0
+ 
+line vty 0 4
+login
+line vty 5 15
+login
+--------------------------------------------------
+
+S3:
+hostname S3
+ 
+ptp clock transparent domain 0 profile default
+ 
+spanning-tree mode pvst
+spanning-tree extend system-id
+ 
+interface Port-channel2
+switchport mode trunk
+ 
+interface Port-channel3
+switchport mode trunk
+
+interface GigabitEthernet6/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 3 mode active
+ 
+interface GigabitEthernet7/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 2 mode active
+ 
+interface GigabitEthernet8/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 2 mode active
+ 
+interface GigabitEthernet9/1
+switchport mode trunk
+channel-protocol lacp
+channel-group 3 mode active
+ 
+interface Vlan1
+ip address 192.168.30.71 255.255.255.240
+ 
+ip default-gateway 192.168.30.65
+ 
+line con 0
+ 
+line vty 0 4
+login
+line vty 5 15
+login
